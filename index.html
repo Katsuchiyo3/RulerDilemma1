@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruler's Dilemma</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #000;
+        }
+
+        .main-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: beige;
+            padding: 10px;
+            border: 2px solid #000;
+        }
+
+        .main-menu button {
+            margin: 10px;
+            padding: 10px;
+        }
+
+        #soldiers-info {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        #soldiers-info p {
+            flex-basis: 48%;
+        }
+
+        #soldiers-info .vertical-list {
+            flex-basis: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-menu">
+        <h2>Ruler's Dilemma</h2>
+        <div id="soldiers-info">
+            <div class="vertical-list">
+                <h3>
+                    Total Soldiers: <span id="total-soldiers">1000</span>
+                    <img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/TotalSoldiers.png" alt="Total Soldiers Icon" class="icon" style="width: 70px; height: 70px; margin-right: 5px;">
+                </h3>
+                <div class="sub-paragraph">
+                    <p>Normal soldiers: <span id="normal-soldiers">1000</span>
+                        <img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/NormalSoldiers.png" alt="Normal Soldiers Icon" class="icon" style="width: 40px; height: 40px; margin-right: 5px;">
+                    </p>
+                    <p>Elite soldiers: <span id="elite-soldiers">0</span>
+                        <img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/EliteSoldiers.png" alt="Elite Soldiers Icon" class="icon" style="width: 40px; height: 40px; margin-right: 5px;">
+                    </p>
+                    <p>Knights: <span id="knights">0</span>
+                        <img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/Knights.png" alt="Elite Soldiers Icon" class="icon" style="width: 40px; height: 40px; margin-right: 5px;">
+                    </p>
+                </div>
+                <h3>Our morale: <span id="our-morale">50</span>
+                    <img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/Morale.png" alt="Morale Icon" class="icon" style="width: 70px; height: 70px; margin-right: 5px;">
+                </h3>
+                <p>Commanders <span id="commanders">0</span>
+                    <img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/Commanders.png" alt="Commanders Icon" class="icon" style="width: 40px; height: 40px; margin-right: 5px;">
+                </p>
+                <p>Weapons <span id="weapons">25</span>
+                    <img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/Weapons.png" alt="Weapons Icon" class="icon" style="width: 40px; height: 40px; margin-right: 5px;">
+                    </p>
+                <p>Armors <span id="armors">25</span>
+                    <img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/Armors.png" alt="Armors Icon "  class="icon" style="width: 40px; height: 40px; margin-right: 5px;">
+                    </p>
+            </div>
+            <div class="vertical-list">
+                <h3>Enemy soldiers: <span id="enemy-soldiers">50000</span>
+                    <img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/TotalSoldiers.png" alt="Total Soldiers Icon" class="icon" style="width: 70px; height: 70px; margin-right: 5px;">
+                </h3>
+                <h3>Enemy Morale: <span id="enemy-morale">50</span>
+                    <img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/Morale.png" alt="Morale Icon" class="icon" style="width: 70px; height: 70px; margin-right: 5px;">
+                </h3>
+            </div>
+        </div>
+        <button onclick="trainSoldiers()"><img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/Training.png" alt="Train Icon" style="width: 20px; height: 20px; margin-right: 5px;">Training Soldiers (1 week cost)</button>
+        <button onclick="blacksmithUpgrade()"><img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/Blacksmith.png" alt="Blacksmith Icon" style="width: 20px; height: 20px; margin-right: 5px;">Blacksmith Upgrade (2 weeks cost)</button>
+        <button onclick="treatyNegotiations()"><img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/Treaty.png" alt="Treaty Icon" style="width: 20px; height: 20px; margin-right: 5px;">Treaty Negotiations (1 week cost)</button>
+        <button onclick="recruitCommander()"><img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/Recruiting.png" alt="Recruit Icon" style="width: 30px; height: 30px; margin-right: 5px;">Recruit Commander (1 week cost)</button>
+        <button onclick="randomEvent()"><img src="file:///E:/Shane/Files/Subjects/IT 204/Pics/CYOA/Random.png" alt="Random Icon" style="width: 20px; height: 20px; margin-right: 5px;">Random Event (1 week cost)</button>
+        <p>Remaining Time: <span id="remaining-time">12</span> weeks</p>
+    </div>
+
+    <script>
+        var remainingTime = 12;
+        var TotalSoldiers = 1000;
+        var enemySoldiers = 50000;
+        var ourMorale = 50;
+        var enemyMorale = 50;
+        var normalSoldiers = 1000;
+        var eliteSoldiers = 0;
+        var knights = 0;
+        var commanders = 0;
+        var weapons = 25;
+        var armors = 25;
+        var weaponsUpgradeDone = false;
+        var armorsUpgradeDone = false;
+        var treatyNegotiationsCount = 0;
+
+        
+
+        function trainSoldiers() {
+            var action = prompt("Choose action:\n1. Train new soldiers\n2. Train elite soldiers\n3. Train knights");
+
+            if (remainingTime >= 1) {
+                if (action === "1") {
+                    trainNewSoldiers();
+                } else if (action === "2") {
+                    trainEliteSoldiers();
+                } else if (action === "3") {
+                    trainKnights();
+                } else {
+                    alert('Invalid choice.');
+                    return;
+                }
+                remainingTime -= 1;
+                updateRemainingTime();
+                updateSoldiersInfo();
+            } else {
+                alert('Not enough time for this action.');
+            }
+        }
+
+        function trainNewSoldiers() {
+            normalSoldiers += 1000;
+            updateTotalSoldiers();
+        }
+
+        function trainEliteSoldiers() {
+            if (normalSoldiers >= 500) {
+                normalSoldiers -= 500;
+                eliteSoldiers += 500;
+                updateTotalSoldiers();
+            } else {
+                alert('Not enough normal soldiers for elite training.');
+                remainingTime += 1;
+            }
+        }
+
+        function trainKnights() {
+            if (eliteSoldiers >= 100) {
+                eliteSoldiers -= 100;
+                knights += 100;
+                updateTotalSoldiers();
+            } else {
+                alert('Not enough elite soldiers for knight training.');
+                remainingTime += 1;
+            }
+        }
+
+        function blacksmithUpgrade() {
+            if (remainingTime >= 2 && !weaponsUpgradeDone || !armorsUpgradeDone) {
+                remainingTime -= 2;
+                var upgradeChoice = prompt("Choose upgrade:\n1. Upgrade weapons\n2. Upgrade armors");
+
+                if (upgradeChoice === "1") {
+                    performBlacksmithUpgrade(upgradeChoice);
+                    weaponsUpgradeDone = true;
+                } else if (upgradeChoice === "2") {
+                    performBlacksmithUpgrade(upgradeChoice);
+                    armorsUpgradeDone = true;
+                } else {
+                    alert('Invalid choice.');
+                    remainingTime += 2;
+                }
+                updateRemainingTime();
+                updateSoldiersInfo();
+            } else if (weaponsUpgradeDone || armorsUpgradeDone) {
+                alert('Weapons and armors can only be upgraded once.');
+            } else {
+                alert('Not enough time for blacksmith upgrade.');
+            }
+        }
+
+        function performBlacksmithUpgrade(choice) {
+            var successRate = Math.random();
+            if (successRate <= 0.85) {
+                if (choice === "1") {
+                    weapons += 50;
+                    ourMorale += 50;
+                    alert('Weapons upgrade successful! Morale +50');
+                } else {
+                    armors += 50;
+                    ourMorale += 50;
+                    alert('Armors upgrade successful! Morale +50');
+                }
+            } else {
+                alert('Upgrade failed. No changes in weapons or armors.');
+            }
+        }
+
+        function treatyNegotiations() {
+            if (treatyNegotiationsCount < 2) {
+                var action = prompt("Choose action:\n1. Extend war by 4 weeks (70% success)\n2. Extend war by 8 weeks (35% success)");
+
+                if (remainingTime >= 1) {
+                    if (action === "1" || action === "2") {
+                        performTreatyNegotiations(action);
+                    } else {
+                        alert('Invalid choice.');
+                    }
+                } else {
+                    alert('Not enough time for treaty negotiations.');
+                }
+            } else {
+                alert('Treaty negotiations can only be successful twice.');
+            }
+        }
+
+        function performTreatyNegotiations(action) {
+    remainingTime -= 1;
+    var successRate = Math.random();
+
+    if (action === "1" && successRate <= 0.70) {
+        remainingTime += 4;
+        treatyNegotiationsCount++;
+        alert('War extended by 4 weeks. Success!');
+        updateRemainingTime();
+    } else if (action === "2" && successRate <= 0.35) {
+        remainingTime += 8;
+        treatyNegotiationsCount++;
+        alert('War extended by 8 weeks. Success!');
+        updateRemainingTime();
+    } else {
+        if (action === "1") {
+            TotalSoldiers -= 100;
+        } else {
+            TotalSoldiers -= 300;
+        }
+        alert('Treaty negotiations failed. Loss of soldiers.');
+        updateSoldiersInfo();
+        updateRemainingTime();
+    }
+}
+
+function performTreatyNegotiations(action) {
+    remainingTime -= 1;
+
+    if (normalSoldiers < 500) {
+        alert('Not enough normal soldiers for treaty negotiations.');
+        remainingTime += 1;
+        return;
+    }
+
+    var successRate = Math.random();
+
+    if (action === "1" && successRate <= 0.70) {
+        remainingTime += 4;
+        treatyNegotiationsCount++;
+        alert('War extended by 4 weeks. Success!');
+        updateRemainingTime();
+    } else if (action === "2" && successRate <= 0.35) {
+        remainingTime += 8;
+        treatyNegotiationsCount++;
+        alert('War extended by 8 weeks. Success!');
+        updateRemainingTime();
+    } else {
+        if (action === "1") {
+            normalSoldiers -= 100;
+        } else {
+            normalSoldiers -= 300;
+        }
+        eliteSoldiers = Math.max(0, eliteSoldiers - 100); 
+        knights = Math.max(0, knights - 50); 
+        TotalSoldiers = normalSoldiers + eliteSoldiers + knights;
+        alert('Treaty negotiations failed. Loss of soldiers.');
+        updateTotalSoldiers();
+        updateSoldiersInfo();
+        updateRemainingTime();
+    }
+}
+    function recruitGoodCommander() {
+        var recruitChance = Math.random();
+        if (recruitChance <= 0.25) {
+            commanders += 150;
+            ourMorale += 150;
+            updateCommanders(); 
+            alert('Good Commander recruited! Morale +150');
+        } else {
+            alert('Recruitment failed. No changes in morale.');
+        }
+    }
+
+    function recruitNormalCommander() {
+        var recruitChance = Math.random();
+        if (recruitChance <= 0.75) {
+            commanders += 50;
+            ourMorale += 50;
+            updateCommanders(); 
+            alert('Normal Commander recruited! Morale +50');
+        } else {
+            alert('Recruitment failed. No changes in morale.');
+        }
+    }
+    function randomEvent() {
+            if (remainingTime >= 1) {
+                remainingTime -= 1;
+                updateRemainingTime();
+
+                var eventChance = Math.random() * 100;
+
+                if (eventChance <= 40) {
+                    
+                    alert('Nothing happened this week. (40% chance)');
+                } else if (eventChance <= 45) {
+                    
+                    if (!weaponsUpgradeDone) {
+                        weapons += 50;
+                        ourMorale += 50;
+                        weaponsUpgradeDone = true;
+                        alert('Free upgrade of weapons and armor! (5% chance)');
+                        updateSoldiersInfo();
+                    } else if (!armorsUpgradeDone) {
+                        armors += 50;
+                        ourMorale += 50;
+                        armorsUpgradeDone = true;
+                        alert('Free upgrade of weapons and armor! (5% chance)');
+                        updateSoldiersInfo();
+                    } else {
+                        alert('Free upgrade event, but weapons and armors are already upgraded.');
+                    }
+                } else if (eventChance <= 65) {
+                  
+                    normalSoldiers += 1000;
+                    updateTotalSoldiers();
+                    updateSoldiersInfo();
+                    alert('New normal soldiers joined! (20% chance)');
+                } else if (eventChance <= 75) {
+                   
+                    eliteSoldiers += 500;
+                    updateTotalSoldiers();
+                    updateSoldiersInfo();
+                    alert('New elite soldier joined! (10% chance)');
+                } else if (eventChance <= 80) {
+                    
+                    knights += 100;
+                    updateTotalSoldiers();
+                    updateSoldiersInfo();
+                    alert('New knights joined! (5% chance)');
+                } else if (eventChance <= 95) {
+                    
+                    commanders += 50;
+                    ourMorale += 50;
+                    updateSoldiersInfo();
+                    updateCommanders();
+                    alert('New normal commander joined! (15% chance)');
+                } else {
+                    
+                    commanders += 150;
+                    ourMorale += 150;
+                    updateSoldiersInfo();
+                    updateCommanders();
+                    alert('New good commander joined! (5% chance)');
+                }
+            } else {
+                alert('Not enough time for this action.');
+            }
+        }
+
+        function updateRemainingTime() {
+            document.getElementById('remaining-time').textContent = remainingTime;
+        }
+
+        function updateTotalSoldiers() {
+            document.getElementById('total-soldiers').textContent = normalSoldiers + eliteSoldiers + knights;
+        }
+
+        function updateCommanders() {
+        document.getElementById('commanders').textContent = commanders;
+    }
+
+        function updateSoldiersInfo() {
+            ourMorale = commanders * 1 + weapons * 1 + armors * 1;
+            document.getElementById('normal-soldiers').textContent = normalSoldiers;
+            document.getElementById('elite-soldiers').textContent = eliteSoldiers;
+            document.getElementById('knights').textContent = knights;
+            document.getElementById('weapons').textContent = weapons;
+            document.getElementById('armors').textContent = armors;
+            document.getElementById('our-morale').textContent = ourMorale;
+        }
+
+        function checkWarResult() {
+    if (remainingTime === 0) {
+        alert("The war is over! Let's see the results.");
+        
+        var ourSoldiersPower = knights * 40 + eliteSoldiers * 10 + normalSoldiers;
+        var ourMoralePower = ourMorale * 150;
+        var ourTotalPower = ourSoldiersPower + ourMoralePower;
+        var enemyTotalPower = enemySoldiers;
+
+        alert(`Our side has ${TotalSoldiers} with a power of ${ourSoldiersPower} and morale of ${ourMorale} with a power of ${ourMoralePower} with a total power of ${ourTotalPower}. The enemy has ${enemySoldiers} soldiers with a total power of ${enemyTotalPower}.`);
+
+        if (ourTotalPower > enemyTotalPower) {
+            alert('Congratulations! You won the war!');
+        } else if (ourTotalPower < enemyTotalPower) {
+            alert('Unfortunately, you lost the war.');
+        } else {
+            alert('It\'s a tie! The war ends in a stalemate.');
+        }
+        
+        return 0;  
+    }
+}
+
+setInterval(checkWarResult, 1000);
+
+    </script>
+</body>
+</html>
+
+           
